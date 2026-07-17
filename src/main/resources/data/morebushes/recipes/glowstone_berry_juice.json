@@ -12,7 +12,7 @@
     { "item": "morebushes:glowstone_berries" }
   ],
   "result": {
-    "id": "morebushes:glowstone_berry_juice",
+    "item": "morebushes:glowstone_berry_juice",
     "count": 1
   }
 }

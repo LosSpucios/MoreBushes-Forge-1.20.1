@@ -12,7 +12,7 @@
     { "item": "morebushes:shulker_berries" }
   ],
   "result": {
-    "id": "morebushes:shulker_berry_juice",
+    "item": "morebushes:shulker_berry_juice",
     "count": 1
   }
 }

@@ -12,7 +12,7 @@
     { "item": "minecraft:sweet_berries" }
   ],
   "result": {
-    "id": "morebushes:sweet_berry_juice",
+    "item": "morebushes:sweet_berry_juice",
     "count": 1
   }
 }

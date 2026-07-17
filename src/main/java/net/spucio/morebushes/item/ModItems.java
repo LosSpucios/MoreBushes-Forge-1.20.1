@@ -42,9 +42,9 @@ public class ModItems {
                         double d1 = entity.getY();
                         double d2 = entity.getZ();
                         for (int i = 0; i < 16; ++i) {
-                            double d3 = entity.getX() + (entity.getRandom().nextDouble() - 0.5D) * 16.0D;
-                            double d4 = entity.getY() + (double)(entity.getRandom().nextInt(16) - 8);
-                            double d5 = entity.getZ() + (entity.getRandom().nextDouble() - 0.5D) * 16.0D;
+                            double d3 = entity.getX() + (entity.getRandom().nextDouble() - 0.5D) * 32.0D;
+                            double d4 = entity.getY() + (double)(entity.getRandom().nextInt(32) - 16);
+                            double d5 = entity.getZ() + (entity.getRandom().nextDouble() - 0.5D) * 32.0D;
                             if (entity.randomTeleport(d3, d4, d5, true)) {
                                 level.playSound(null, d0, d1, d2, SoundEvents.CHORUS_FRUIT_TELEPORT, SoundSource.PLAYERS, 1.0F, 1.0F);
                                 break;
@@ -87,9 +87,9 @@ public class ModItems {
                         double d1 = entity.getY();
                         double d2 = entity.getZ();
                         for (int i = 0; i < 16; ++i) {
-                            double d3 = entity.getX() + (entity.getRandom().nextDouble() - 0.5D) * 16.0D;
-                            double d4 = entity.getY() + (double)(entity.getRandom().nextInt(16) - 8);
-                            double d5 = entity.getZ() + (entity.getRandom().nextDouble() - 0.5D) * 16.0D;
+                            double d3 = entity.getX() + (entity.getRandom().nextDouble() - 0.5D) * 64.0D;
+                            double d4 = entity.getY() + (double)(entity.getRandom().nextInt(64) - 32);
+                            double d5 = entity.getZ() + (entity.getRandom().nextDouble() - 0.5D) * 64.0D;
                             if (entity.randomTeleport(d3, d4, d5, true)) {
                                 level.playSound(null, d0, d1, d2, SoundEvents.CHORUS_FRUIT_TELEPORT, SoundSource.PLAYERS, 1.0F, 1.0F);
                                 break;

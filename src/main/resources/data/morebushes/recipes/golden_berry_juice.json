@@ -8,7 +8,7 @@
     { "item": "morebushes:golden_berries" }
   ],
   "result": {
-    "id": "morebushes:golden_berry_juice",
+    "item": "morebushes:golden_berry_juice",
     "count": 1
   }
 }

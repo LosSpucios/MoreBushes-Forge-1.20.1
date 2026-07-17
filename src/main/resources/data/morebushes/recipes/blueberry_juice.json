@@ -12,7 +12,7 @@
     { "item": "morebushes:blueberries" }
   ],
   "result": {
-    "id": "morebushes:blueberry_juice",
+    "item": "morebushes:blueberry_juice",
     "count": 1
   }
 }

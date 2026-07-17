@@ -12,7 +12,7 @@
     { "item": "morebushes:miners_berries" }
   ],
   "result": {
-    "id": "morebushes:miners_berry_juice",
+    "item": "morebushes:miners_berry_juice",
     "count": 1
   }
 }
