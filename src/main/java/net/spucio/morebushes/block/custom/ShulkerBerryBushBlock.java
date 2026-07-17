@@ -15,16 +15,42 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelReader;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.SweetBerryBushBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.gameevent.GameEvent;
 import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.shapes.CollisionContext;
+import net.minecraft.world.phys.shapes.VoxelShape;
 import net.spucio.morebushes.item.ModItems;
+import static net.minecraft.world.level.block.SweetBerryBushBlock.AGE;
 
 public class ShulkerBerryBushBlock extends SweetBerryBushBlock {
+
+    private static final VoxelShape SHAPE_AGE_0 = Block.box(3.5D, 0.0D, 3.1D, 12.5D, 9.0D, 12.5D);
+    private static final VoxelShape SHAPE_AGE_1 = Block.box(2.5D, 0.0D, 2.5D, 13.5D, 12.0D, 13.5D);
+    private static final VoxelShape SHAPE_AGE_2 = Block.box(1.65D, 0.0D, 1.65D, 14.27D, 14.0D, 14.27D);
+    private static final VoxelShape SHAPE_AGE_3 = Block.box(0.67D, 0.0D, 0.67D, 15.15D, 16.0D, 15.15D);
+
     public ShulkerBerryBushBlock(Properties properties) {
         super(properties);
+    }
+
+    @Override
+    public VoxelShape getCollisionShape(BlockState pState, BlockGetter pLevel, BlockPos pPos, CollisionContext pContext) {
+        return net.minecraft.world.phys.shapes.Shapes.empty();
+    }
+
+    @Override
+    public VoxelShape getShape(BlockState pState, BlockGetter pLevel, BlockPos pPos, CollisionContext pContext) {
+        int age = pState.getValue(SweetBerryBushBlock.AGE); // Zmiana tutaj
+        return switch (age) {
+            case 0 -> SHAPE_AGE_0;
+            case 1 -> SHAPE_AGE_1;
+            case 2 -> SHAPE_AGE_2;
+            default -> SHAPE_AGE_3;
+        };
     }
 
     @Override
@@ -55,13 +81,12 @@ public class ShulkerBerryBushBlock extends SweetBerryBushBlock {
     public void entityInside(BlockState pState, Level pLevel, BlockPos pPos, Entity pEntity) {
         super.entityInside(pState, pLevel, pPos, pEntity);
 
-        // Sprawdzamy czy to żywa istota i czy nie jesteśmy po stronie klienta
         if (!pLevel.isClientSide && pEntity instanceof LivingEntity) {
             LivingEntity livingEntity = (LivingEntity) pEntity;
 
-            // 25% szansy na tick (1 na 4)
-            if (pLevel.random.nextInt(4) == 0) {
-                // Efekt lewitacji na 100 ticków (5 sekund * 20 ticków)
+            int age = pState.getValue(AGE);
+
+            if ((age == 2 || age == 3) && pLevel.random.nextInt(4) == 0) {
                 livingEntity.addEffect(new MobEffectInstance(MobEffects.LEVITATION, 100, 0));
             }
         }

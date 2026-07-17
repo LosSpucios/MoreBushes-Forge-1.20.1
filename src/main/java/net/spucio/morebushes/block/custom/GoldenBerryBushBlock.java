@@ -13,19 +13,44 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.BonemealableBlock;
 import net.minecraft.world.level.block.SweetBerryBushBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.gameevent.GameEvent;
 import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.shapes.CollisionContext;
+import net.minecraft.world.phys.shapes.VoxelShape;
 import net.spucio.morebushes.item.ModItems;
+import static net.minecraft.world.level.block.SweetBerryBushBlock.AGE;
 
 public class GoldenBerryBushBlock extends SweetBerryBushBlock implements BonemealableBlock {
+
+    private static final VoxelShape SHAPE_AGE_0 = Block.box(3.5D, 0.0D, 3.1D, 12.5D, 9.0D, 12.5D);
+    private static final VoxelShape SHAPE_AGE_1 = Block.box(2.5D, 0.0D, 2.5D, 13.5D, 12.0D, 13.5D);
+    private static final VoxelShape SHAPE_AGE_2 = Block.box(1.65D, 0.0D, 1.65D, 14.27D, 14.0D, 14.27D);
+    private static final VoxelShape SHAPE_AGE_3 = Block.box(0.67D, 0.0D, 0.67D, 15.15D, 16.0D, 15.15D);
+
     public GoldenBerryBushBlock(Properties properties) {
         super(properties);
     }
 
-    // Blokada mączki kostnej: gra "nie widzi" tutaj celu do nawożenia
+    @Override
+    public VoxelShape getCollisionShape(BlockState pState, BlockGetter pLevel, BlockPos pPos, CollisionContext pContext) {
+        return net.minecraft.world.phys.shapes.Shapes.empty();
+    }
+
+    @Override
+    public VoxelShape getShape(BlockState pState, BlockGetter pLevel, BlockPos pPos, CollisionContext pContext) {
+        int age = pState.getValue(SweetBerryBushBlock.AGE); // Zmiana tutaj
+        return switch (age) {
+            case 0 -> SHAPE_AGE_0;
+            case 1 -> SHAPE_AGE_1;
+            case 2 -> SHAPE_AGE_2;
+            default -> SHAPE_AGE_3;
+        };
+    }
+
     public boolean isValidBonemealTarget(BlockGetter pLevel, BlockPos pPos, BlockState pState, boolean pIsClient) {
         return false;
     }
@@ -35,7 +60,6 @@ public class GoldenBerryBushBlock extends SweetBerryBushBlock implements Bonemea
     }
 
     public void performBonemeal(ServerLevel pLevel, RandomSource pRandom, BlockPos pPos, BlockState pState) {
-        // Pusta metoda, aby wyeliminować jakiekolwiek domyślne efekty mączki
     }
 
     @Override
@@ -55,7 +79,6 @@ public class GoldenBerryBushBlock extends SweetBerryBushBlock implements Bonemea
         int age = pState.getValue(AGE);
         ItemStack heldItem = pPlayer.getItemInHand(pHand);
 
-        // 1. ZBIERANIE: Tylko przy age 3
         if (age == 3) {
             int j = 1 + pLevel.random.nextInt(2);
             popResource(pLevel, pPos, new ItemStack(ModItems.GOLDENBERRIES.get(), j));
@@ -67,12 +90,9 @@ public class GoldenBerryBushBlock extends SweetBerryBushBlock implements Bonemea
             return InteractionResult.sidedSuccess(pLevel.isClientSide);
         }
 
-        // 2. NAWOŻENIE ZŁOTEM
         if (heldItem.is(Items.GOLD_INGOT) && age < 3) {
             if (!pLevel.isClientSide) {
-                // Szansa na wzrost (np. 30%)
                 if (pLevel.random.nextFloat() < 0.4F) {
-                    // Udany wzrost
                     pLevel.playSound(null, pPos, SoundEvents.BONE_MEAL_USE, SoundSource.BLOCKS, 1.0F, 1.0F);
                     ((ServerLevel) pLevel).sendParticles(net.minecraft.core.particles.ParticleTypes.WAX_ON,
                             pPos.getX() + 0.5D, pPos.getY() + 0.5D, pPos.getZ() + 0.5D, 10, 0.3D, 0.3D, 0.3D, 0.05D);
@@ -80,13 +100,11 @@ public class GoldenBerryBushBlock extends SweetBerryBushBlock implements Bonemea
                     BlockState blockstate = pState.setValue(AGE, age + 1);
                     pLevel.setBlock(pPos, blockstate, 2);
                 } else {
-                    // "Pudło" - brak wzrostu, ale dźwięk i particle nadal mogą być dla efektu
                     pLevel.playSound(null, pPos, SoundEvents.BONE_MEAL_USE, SoundSource.BLOCKS, 0.5F, 1.0F);
                     ((ServerLevel) pLevel).sendParticles(net.minecraft.core.particles.ParticleTypes.WAX_ON,
                             pPos.getX() + 0.5D, pPos.getY() + 0.5D, pPos.getZ() + 0.5D, 10, 0.3D, 0.3D, 0.3D, 0.05D);
                 }
 
-                // Sztabka znika niezależnie od tego, czy wzrost się udał (jak nawóz)
                 if (!pPlayer.isCreative()) heldItem.shrink(1);
             }
             return InteractionResult.sidedSuccess(pLevel.isClientSide);

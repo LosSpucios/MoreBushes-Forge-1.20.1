@@ -75,7 +75,7 @@ public class JuiceItem extends Item {
         // Pobieranie klucza w 1.20.1
         ResourceLocation id = ForgeRegistries.ITEMS.getKey(this);
         if (id != null && id.getPath().contains("chorus_berry_juice")) {
-            tooltip.add(Component.literal("Chorus Effect").withStyle(ChatFormatting.LIGHT_PURPLE));
+            tooltip.add(Component.literal("Chorus Effect III").withStyle(ChatFormatting.BLUE));
         }
 
         super.appendHoverText(stack, level, tooltip, flag);
